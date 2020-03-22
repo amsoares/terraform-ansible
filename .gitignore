@@ -1,2 +1,3 @@
 /infrastructure/.terraform/
 /.idea/
+/infrastructure/terraform.tfstate
