@@ -1,5 +1,6 @@
 # ----- Launch Configuration -----
 
+/*
 resource "aws_launch_configuration" "pc_lc" {
   name_prefix          = "wp_lc-"
   image_id             = var.ec2_ami
@@ -15,4 +16,4 @@ resource "aws_launch_configuration" "pc_lc" {
 
 data "template_file" "installnginx" {
   template = file("${path.module}/installnginx.tpl")
-}
+}*/

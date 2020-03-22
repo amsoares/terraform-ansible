@@ -7,10 +7,10 @@ variable "vpc_cidr" {}
 variable "cidrs" {
   type = map
 }
-variable "elb_healthy_threshold" {}
-variable "elb_unhealthy_threshold" {}
-variable "elb_timeout" {}
-variable "elb_interval" {}
+variable "alb_healthy_threshold" {}
+variable "alb_unhealthy_threshold" {}
+variable "alb_timeout" {}
+variable "alb_interval" {}
 variable "ec2_instance_type" {}
 variable "ec2_ami" {}
 variable "ec2_public_key_path" {}

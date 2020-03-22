@@ -46,3 +46,21 @@ resource "aws_wafregional_ipset" "pc_blacklisted_ips" {
     }
   }
 }
+
+resource "aws_wafregional_web_acl_association" "pc_lb_web_acl_association" {
+  resource_arn = module.alb.this_lb_arn
+  web_acl_id   = aws_wafregional_web_acl.pc_waf_acl.id
+}
+
+/*
+module "waf" {
+  source = "trussworks/waf/aws"
+
+  environment                         = "${var.environment}"
+  associate_alb                       = true
+  alb_arn                             = "${module.alb_web_containers.alb_arn}"
+  wafregional_rule_f5_id              = "${var.wafregional_rule_id}"
+  ips_disallow                        = "${var.waf_ips_diallow}"
+  regex_path_disallow_pattern_strings = "${var.waf_regex_path_disallow_pattern_strings}"
+  regex_host_allow_pattern_strings    = "${var.waf_regex_host_allow_pattern_strings}"
+}*/

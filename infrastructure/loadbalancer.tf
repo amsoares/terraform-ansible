@@ -1,37 +1,52 @@
 # ----- Load Balancer -----
-
-resource "aws_elb" "pc_elb" {
-  name = "${var.domain_name}-elb"
-
+/*resource "aws_lb" "pc_lb" {
+  name = "${var.domain_name}-alb"
+  load_balancer_type = "application"
+  internal           = false
+  security_groups = [aws_security_group.pc_public_sg.id]
   subnets = [
     aws_subnet.pc_public1.id,
     aws_subnet.pc_public2.id
   ]
 
-  security_groups = [aws_security_group.pc_public_sg.id]
-
-  listener {
-    instance_port     = 80
-    instance_protocol = "http"
-    lb_port           = 80
-    lb_protocol       = "http"
-  }
-
-  health_check {
-    healthy_threshold   = var.elb_healthy_threshold
-    unhealthy_threshold = var.elb_unhealthy_threshold
-    timeout             = var.elb_timeout
-    target              = "TCP:80"
-    interval            = var.elb_interval
-  }
-
-  cross_zone_load_balancing   = true
+  enable_cross_zone_load_balancing = true
   idle_timeout                = 400
-  connection_draining         = true
-  connection_draining_timeout = 400
-  #instances                   = [aws_instance.pc_instance.id]
 
   tags = {
-    Name = "pc_${var.domain_name}-elb"
+    Name = "pc_${var.domain_name}-alb"
+  }
+}*/
+
+module "alb" {
+  source  = "terraform-aws-modules/alb/aws"
+  version = "~> 5.0"
+
+  name = "my-alb"
+
+  load_balancer_type = "application"
+
+  vpc_id             = aws_vpc.pc_vpc.id
+  subnets            = [aws_subnet.pc_public1.id, aws_subnet.pc_public2.id]
+  security_groups    = [aws_security_group.pc_public_sg.id]
+
+  target_groups = [
+    {
+      name_prefix      = "default"
+      backend_protocol = "HTTP"
+      backend_port     = 80
+      target_type      = "instance"
+    }
+  ]
+
+  http_tcp_listeners = [
+    {
+      port               = 80
+      protocol           = "HTTP"
+      target_group_index = 0
+    }
+  ]
+
+  tags = {
+    Environment = "Test"
   }
 }
